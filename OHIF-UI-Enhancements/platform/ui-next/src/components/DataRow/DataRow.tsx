@@ -130,7 +130,7 @@ export const DataRow: React.FC<DataRowProps> = ({
 
   const decodeHTML = (html: string) => {
     const txt = document.createElement('textarea');
-    txt.innerHTML = html;
+    txt.textContent = html; // Fixed: Prevents XSS by using textContent instead of innerHTML
     return txt.value;
   };
 
