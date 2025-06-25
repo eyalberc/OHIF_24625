@@ -87,21 +87,17 @@
   transform: translate3d(0, 0, 0);
   will-change: opacity;
   
-  /* Optimized backdrop effect - removed expensive backdrop-filter */
-  background: rgba(17, 24, 39, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  
   /* Smooth opacity transitions only */
   transition: opacity 0.2s ease-out;
 }
 
-.viewport-overlay-current {
+.study-aware-viewport.viewport-current-study .viewport-overlay {
   color: var(--color-primary);
   border-color: rgba(96, 165, 250, 0.3);
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
 }
 
-.viewport-overlay-prior {
+.study-aware-viewport.viewport-prior-study .viewport-overlay {
   color: var(--color-warning);
   border-color: rgba(250, 204, 21, 0.3);
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);

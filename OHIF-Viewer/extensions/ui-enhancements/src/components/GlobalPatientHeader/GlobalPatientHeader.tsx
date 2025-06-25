@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { ViewportGridService, DicomMetadataStore } from '@ohif/core';
+import './GlobalPatientHeader.css';
 
 interface PatientData {
   PatientName?: string;
@@ -6,7 +8,7 @@ interface PatientData {
   PatientBirthDate?: string;
 }
 
-interface GlobalPatientHeaderProps {
+export interface GlobalPatientHeaderProps {
   servicesManager?: any;
 }
 
@@ -16,23 +18,41 @@ interface GlobalPatientHeaderProps {
  */
 const GlobalPatientHeader: React.FC<GlobalPatientHeaderProps> = ({ servicesManager }) => {
   const [patientData, setPatientData] = useState<PatientData | null>(null);
+  const { ViewportGridService, DicomMetadataStore } = servicesManager.services;
 
   useEffect(() => {
-    // Use OHIF's StudyService to get current patient data
-    if (servicesManager?.services?.StudyService) {
-      const studyService = servicesManager.services.StudyService;
-      const studies = studyService.getStudies();
-      
-      if (studies && studies.length > 0) {
-        const currentStudy = studies[0];
-        setPatientData({
-          PatientName: currentStudy.PatientName,
-          PatientID: currentStudy.PatientID,
-          PatientBirthDate: currentStudy.PatientBirthDate,
-        });
+    const updatePatientData = () => {
+      const activeViewportIndex = ViewportGridService.getActiveViewportIndex();
+      const displaySet = ViewportGridService.getDisplaySetForViewport(activeViewportIndex);
+
+      if (displaySet && displaySet.StudyInstanceUID) {
+        const studyMetadata = DicomMetadataStore.getStudyMetadata(displaySet.StudyInstanceUID);
+
+        if (studyMetadata) {
+          setPatientData({
+            PatientName: studyMetadata.PatientName?.Alphabetic || studyMetadata.PatientName || 'Unknown',
+            PatientID: studyMetadata.PatientID || 'N/A',
+            PatientBirthDate: studyMetadata.PatientBirthDate || 'N/A',
+          });
+          return;
+        }
       }
-    }
-  }, [servicesManager]);
+      
+      setPatientData(null);
+    };
+
+    const { unsubscribe } = ViewportGridService.subscribe(
+      ViewportGridService.EVENTS.ACTIVE_VIEWPORT_ID_CHANGED,
+      updatePatientData
+    );
+
+    // Initial call
+    updatePatientData();
+
+    return () => {
+      unsubscribe();
+    };
+  }, [ViewportGridService, DicomMetadataStore]);
 
   // Format patient birth date for display
   const formatBirthDate = (date: string | undefined): string => {
@@ -56,6 +76,12 @@ const GlobalPatientHeader: React.FC<GlobalPatientHeaderProps> = ({ servicesManag
         content: 'UserPreferences',
         title: 'User Preferences',
       });
+    }
+  };
+
+  const handleExit = () => {
+    if (servicesManager?.services?.UIRouterService) {
+      servicesManager.services.UIRouterService.push('/');
     }
   };
 
@@ -99,7 +125,7 @@ const GlobalPatientHeader: React.FC<GlobalPatientHeaderProps> = ({ servicesManag
           ⚙️
         </button>
         <button 
-          onClick={() => window.close()}
+          onClick={handleExit}
           className="exit-btn"
           title="Exit Application"
         >

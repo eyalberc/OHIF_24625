@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 interface StudyAwareViewportProps {
   viewportData?: any;
@@ -15,16 +15,34 @@ const StudyAwareViewport: React.FC<StudyAwareViewportProps> = ({
   children, 
   servicesManager 
 }) => {
-  // Determine if this is current or prior study based on viewport data
-  const getStudyType = (): 'current' | 'prior' | 'default' => {
-    if (!viewportData?.StudyInstanceUID) return 'default';
-    
-    // Logic to determine if this is current or prior study
-    // This would need to be connected to OHIF's study management
-    return 'current'; // Placeholder - would be dynamic
-  };
+  const [studyType, setStudyType] = useState<'current' | 'prior' | 'default'>('default');
+  const { DisplaySetService } = servicesManager.services;
 
-  const studyType = getStudyType();
+  useEffect(() => {
+    if (!viewportData?.StudyInstanceUID || !DisplaySetService) {
+      setStudyType('default');
+      return;
+    }
+
+    const allDisplaySets = DisplaySetService.getActiveDisplaySets();
+    const uniqueStudyUIDs = [
+      ...new Set(allDisplaySets.map(ds => ds.StudyInstanceUID)),
+    ];
+
+    if (uniqueStudyUIDs.length <= 1) {
+      setStudyType('default');
+      return;
+    }
+
+    // Simple logic: first study UID is 'current', others are 'prior'
+    const currentStudyUID = uniqueStudyUIDs[0];
+    if (viewportData.StudyInstanceUID === currentStudyUID) {
+      setStudyType('current');
+    } else {
+      setStudyType('prior');
+    }
+  }, [viewportData, DisplaySetService]);
+
   const borderClass = studyType === 'current' ? 'viewport-current-study' : 
                       studyType === 'prior' ? 'viewport-prior-study' : '';
 
@@ -33,7 +51,7 @@ const StudyAwareViewport: React.FC<StudyAwareViewportProps> = ({
       {children}
       {/* Study date overlay */}
       {viewportData?.StudyDate && (
-        <div className={`viewport-overlay ${studyType === 'current' ? 'viewport-overlay-current' : 'viewport-overlay-prior'}`}>
+        <div className="viewport-overlay">
           Study Date: {viewportData.StudyDate}
         </div>
       )}

@@ -1,5 +1,6 @@
 import React from 'react';
 import GlobalPatientHeader from './components/GlobalPatientHeader/GlobalPatientHeader';
+import StudyAwareViewport from './components/StudyAwareViewport/StudyAwareViewport';
 
 /**
  * Customization module for UI enhancements
@@ -8,9 +9,12 @@ import GlobalPatientHeader from './components/GlobalPatientHeader/GlobalPatientH
 export default function getCustomizationModule() {
   return [
     {
-      name: 'global-patient-header',
-      target: 'header',
-      content: GlobalPatientHeader,
+      id: 'ohif.header',
+      component: GlobalPatientHeader,
+    },
+    {
+      id: 'OHIFCornerstoneViewport',
+      component: StudyAwareViewport,
     },
     {
       name: 'enhanced-theme',
