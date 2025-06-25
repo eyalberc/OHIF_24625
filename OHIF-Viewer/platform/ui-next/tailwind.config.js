@@ -43,6 +43,7 @@ module.exports = {
     },
     extend: {
       colors: {
+        // Existing OHIF colors
         highlight: 'hsl(var(--highlight))',
         neutral: 'hsl(var(--neutral))',
         'neutral-light': 'hsl(var(--neutral-light))',
@@ -80,6 +81,46 @@ module.exports = {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
         },
+        
+        // PRD Color Integration - New semantic colors from subtask 6.3
+        warning: {
+          DEFAULT: 'hsl(var(--warning))',
+          bg: 'var(--warning-bg)',
+          border: 'var(--warning-border)', 
+          text: 'var(--warning-text)',
+        },
+        success: {
+          DEFAULT: 'hsl(var(--success))',
+          bg: 'var(--success-bg)',
+          border: 'var(--success-border)',
+          text: 'var(--success-text)',
+        },
+        error: {
+          DEFAULT: 'hsl(var(--error))',
+          bg: 'var(--error-bg)',
+          border: 'var(--error-border)',
+          text: 'var(--error-text)',
+        },
+        info: {
+          DEFAULT: 'hsl(var(--info))',
+          bg: 'var(--info-bg)',
+          border: 'var(--info-border)',
+          text: 'var(--info-text)',
+        },
+        
+        // PRD Color Aliases - Direct color token access
+        'prd-primary': 'hsl(var(--color-primary))',
+        'prd-background': 'hsl(var(--color-background))',
+        'prd-panel': 'hsl(var(--color-panel))',
+        'prd-text-primary': 'hsl(var(--color-text-primary))',
+        'prd-text-secondary': 'hsl(var(--color-text-secondary))',
+        'prd-border': 'hsl(var(--color-border))',
+        'prd-warning': 'hsl(var(--color-warning))',
+        'prd-success': 'hsl(var(--color-success))',
+        'prd-error': 'hsl(var(--color-error))',
+        
+        // Text hierarchy convenience classes
+        'text-secondary': 'hsl(var(--text-secondary))',
       },
       borderRadius: {
         lg: 'var(--radius)',

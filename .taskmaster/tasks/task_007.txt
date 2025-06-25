@@ -1,0 +1,189 @@
+# Task ID: 7
+# Title: Integrate and Register UI-Enhancements Extension with OHIF v3 Core
+# Status: pending
+# Dependencies: 1, 2, 3, 4, 5, 6
+# Priority: high
+# Description: Configure and register the ui-enhancements extension with the OHIF v3 core system, ensuring proper integration of all enhanced components, services, and data sources while avoiding conflicts with default extensions.
+# Details:
+This task involves integrating the ui-enhancements extension with the OHIF v3 core system to ensure all enhanced components work seamlessly with the platform. The implementation should focus on proper registration and configuration of the extension.
+
+Key implementation steps:
+
+1. **Extension Registration in App Configuration**:
+   - Modify the `platform/app/src/appConfig.js` file to include the ui-enhancements extension
+   - Ensure the extension is properly imported and added to the extensions array
+   - Configure any extension-specific settings in the configuration object
+   - Example configuration:
+   ```javascript
+   import UIEnhancementsExtension from '@ohif/extension-ui-enhancements';
+   
+   const extensionDependencies = {
+     // Other extensions...
+     '@ohif/extension-ui-enhancements': UIEnhancementsExtension,
+   };
+   ```
+
+2. **Component Registration Conflict Resolution**:
+   - Review all component registrations in the ui-enhancements extension
+   - Identify potential conflicts with default OHIF extensions (especially cornerstone and default UI)
+   - Implement conflict resolution strategy:
+     - Use higher priority values for enhanced components to override defaults
+     - Implement conditional registration based on configuration flags
+     - Document any components that completely replace default components
+
+3. **Data Source Registration Order**:
+   - Ensure proper registration order for the virtual series data source
+   - Modify the data source registration in `getDataSourcesModule.js` to set appropriate priority
+   - Verify that the enhanced data source correctly extends or wraps the default data sources
+   - Test with various study types to ensure proper data source selection
+
+4. **Service Integration Validation**:
+   - Implement and validate integration with ViewportGridService:
+     - Ensure the extension correctly accesses and modifies viewport state
+     - Verify event subscriptions for viewport changes
+   - Implement and validate integration with ToolbarService:
+     - Register enhanced toolbar buttons with proper priorities
+     - Verify tool activation/deactivation flows
+   - Implement and validate integration with CustomizationService:
+     - Register customization points for the enhanced UI components
+     - Ensure theme customizations are properly applied
+
+5. **Extension Lifecycle Hook Implementation**:
+   - Implement the `preRegistration` hook to perform any setup before the extension is registered
+   - Implement the `onModeEnter` and `onModeExit` hooks to handle mode-specific initialization
+   - Add cleanup logic in appropriate lifecycle methods to prevent memory leaks
+   - Example implementation:
+   ```javascript
+   export default {
+     id: 'ui-enhancements',
+     // ...
+     preRegistration({ servicesManager }) {
+       // Perform any pre-registration setup
+       const { UIDialogService } = servicesManager.services;
+       // Register custom dialogs or perform other initialization
+     },
+     onModeEnter: ({ servicesManager, extensionManager }) => {
+       // Mode-specific initialization
+     },
+     onModeExit: () => {
+       // Cleanup resources
+     }
+   };
+   ```
+
+6. **App Configuration Templates**:
+   - Create deployment-ready configuration templates in `platform/app/src/appConfig.js`
+   - Implement feature flags to enable/disable specific enhancements
+   - Document configuration options for deployment scenarios
+   - Example configuration template:
+   ```javascript
+   const uiEnhancementsConfig = {
+     enableEnhancedToolbar: true,
+     enableGlobalPatientHeader: true,
+     enableStudyComparison: true,
+     enableVirtualSeries: true,
+     enableHangingProtocolEditor: true,
+   };
+   ```
+
+7. **Extension Package Configuration**:
+   - Update the extension's package.json to properly declare dependencies
+   - Ensure the extension's entry point correctly exports all required modules
+   - Verify the extension's build process produces compatible output for OHIF v3
+
+# Test Strategy:
+1. **Extension Registration Testing**:
+   - Create a test configuration that includes the ui-enhancements extension
+   - Launch OHIF with this configuration and verify the extension loads without errors
+   - Check browser console for any registration warnings or errors
+   - Verify the extension appears in the ExtensionManager's registered extensions list
+
+2. **Component Conflict Testing**:
+   - Create a test script that identifies all component registrations from ui-enhancements
+   - Compare against default extension registrations to identify potential conflicts
+   - For each identified conflict:
+     - Test with both components enabled to verify override behavior
+     - Document expected behavior and verify actual behavior matches
+   - Test with various configuration combinations to ensure proper component selection
+
+3. **Data Source Integration Testing**:
+   - Load studies with and without the enhanced data source to compare behavior
+   - Verify virtual series functionality works correctly with the registered data source
+   - Test with large studies (500+ images) to ensure performance is maintained
+   - Verify proper data source selection based on study metadata
+
+4. **Service Integration Testing**:
+   - Create unit tests for each service integration point:
+     - ViewportGridService: Test viewport creation, selection, and layout changes
+     - ToolbarService: Test tool registration, activation, and state management
+     - CustomizationService: Test theme application and component customization
+   - Implement integration tests that verify proper communication between services
+   - Document expected service behavior and verify against actual behavior
+
+5. **Lifecycle Hook Testing**:
+   - Create unit tests for each lifecycle hook implementation
+   - Simulate extension registration process to test preRegistration hook
+   - Test mode enter/exit scenarios to verify proper resource management
+   - Verify cleanup logic prevents memory leaks using Chrome DevTools Memory profiler
+
+6. **Configuration Template Testing**:
+   - Test each provided configuration template in development environment
+   - Verify feature flags correctly enable/disable specific enhancements
+   - Document configuration options and their effects on the application
+   - Create a test matrix covering all possible configuration combinations
+
+7. **End-to-End Testing**:
+   - Create Cypress tests that verify the complete integration of the extension
+   - Test all enhanced components in realistic usage scenarios
+   - Verify performance metrics remain within acceptable ranges
+   - Document any edge cases or limitations discovered during testing
+
+# Subtasks:
+## 1. Extension Registration [pending]
+### Dependencies: None
+### Description: Register the extension with the core system, ensuring it is discoverable and can be managed through the platform's extension management interface.
+### Details:
+Define extension metadata, register entry points, and ensure compatibility with the core system's extension registry.
+
+## 2. Component Conflict Resolution [pending]
+### Dependencies: 7.1
+### Description: Identify and resolve conflicts between extension components and existing system components to prevent runtime errors or unexpected behavior.
+### Details:
+Analyze overlapping namespaces, dependencies, or UI elements and implement conflict resolution strategies such as namespacing or dependency injection.
+
+## 3. Data Source Registration Order [pending]
+### Dependencies: 7.1, 7.2
+### Description: Determine and implement the correct order for registering data sources to ensure dependencies are satisfied and data flows correctly.
+### Details:
+Map data source dependencies, sequence registration steps, and document the order for maintainability.
+
+## 4. Service Integration Validation [pending]
+### Dependencies: 7.1, 7.2, 7.3
+### Description: Validate that all extension services are correctly integrated and interact as expected with the core system and other extensions.
+### Details:
+Perform integration checks, mock service calls, and verify service contracts and error handling.
+
+## 5. Lifecycle Hook Implementation [pending]
+### Dependencies: 7.1, 7.2, 7.3, 7.4
+### Description: Implement lifecycle hooks (e.g., initialization, shutdown, update) to ensure the extension responds appropriately to system events.
+### Details:
+Define and register lifecycle methods, test hook execution, and handle resource cleanup and state persistence.
+
+## 6. Configuration Template Creation [pending]
+### Dependencies: 7.1, 7.2, 7.3, 7.4, 7.5
+### Description: Create configuration templates to standardize extension setup and facilitate consistent deployments across environments.
+### Details:
+Design configuration schemas, provide sample templates, and document configuration options for users.
+
+## 7. Package Configuration [pending]
+### Dependencies: 7.1, 7.2, 7.3, 7.4, 7.5, 7.6
+### Description: Configure packaging for the extension, including dependencies, build scripts, and distribution metadata.
+### Details:
+Update package manifests, specify versioning, and ensure all required assets and dependencies are included.
+
+## 8. End-to-End Integration Testing [pending]
+### Dependencies: 7.1, 7.2, 7.3, 7.4, 7.5, 7.6, 7.7
+### Description: Conduct comprehensive end-to-end tests to verify the extension's functionality, integration points, and overall stability within the platform.
+### Details:
+Develop test cases covering all integration scenarios, automate test execution, and document results for future reference.
+

@@ -1,0 +1,126 @@
+Of course. This Product Requirements Document (PRD) consolidates all our design decisions and technical strategies into a single, comprehensive specification. It is structured for an external review by stakeholders, product managers, and the development team, providing the "why," the "what," and the "how" for each enhancement.
+
+---
+
+## **Product Requirements Document: OHIF v3 Viewer UI/UX Enhancement Initiative**
+
+**Document Version:** 1.0 (Final)
+**Status:** Approved for Implementation
+**Date:** June 7, 2025
+**Author:** Cadence, UI/UX Architect
+
+### **1. Introduction**
+
+#### **1.1. Project Overview**
+This document outlines the requirements for a comprehensive UI/UX overhaul of the OHIF v3 Medical Image Viewer. The initiative's primary goal is to enhance clinical workflow efficiency, reduce cognitive load for clinicians, and improve patient safety through a more intuitive and context-aware interface.
+
+#### **1.2. Target User Persona**
+The primary persona guiding these requirements is **Dr. Evelyn Reed, Radiologist**. Dr. Reed's workflow demands:
+*   **Speed and Efficiency:** Minimizing clicks and surfacing common tools directly.
+*   **Unambiguous Clarity:** At-a-glance, persistent context for patient and study information.
+*   **Ergonomics:** A clean, dark-mode interface optimized for low-light reading rooms.
+
+#### **1.3. Scope**
+*   **In Scope:** Redesign of the primary viewer layout, toolbars, viewport overlays, and study panel interactions. Implementation of new UI for existing backend capabilities (e.g., Hanging Protocols).
+*   **Out of Scope:** Changes to the core DICOM parsing engine, backend data services (PACS/VNA), or fundamental medical imaging algorithms.
+
+---
+
+### **2. Feature Requirements**
+
+#### **FR-1: Global Patient Header**
+*   **1.1. Rationale:** The current UI hides critical patient information behind a click, creating a risk of clinical error. A persistent header ensures patient context is never lost.
+*   **1.2. Functional Requirements:**
+    *   **FR-1.2.1:** The system MUST display a persistent header bar at the top of the application viewport.
+    *   **FR-1.2.2:** This header MUST always be visible and not scroll with the page content.
+    *   **FR-1.2.3:** The header MUST display the active patient's Full Name, Medical Record Number (MRN), and Date of Birth (DOB).
+*   **1.3. UI/UX Specification:**
+    *   **Layout:** A 48px tall, full-width bar with a 1px bottom border.
+    *   **Content:** Patient info left-aligned. App controls (Preferences, Exit) right-aligned.
+    *   **Typography:** Patient Name: 16px Bold. Demographics: 14px Regular.
+*   **1.4. Acceptance Criteria:**
+    *   Given a user is viewing a study, THEN the patient's name, MRN, and DOB are visible at the top of the screen at all times.
+
+#### **FR-2: Redesigned Primary Toolbar**
+*   **2.1. Rationale:** The current toolbar hides frequently used tools within a "More" dropdown, increasing clicks and slowing down the review process. Enlarging buttons improves accessibility.
+*   **2.2. Functional Requirements:**
+    *   **FR-2.2.1:** The system MUST display a single, persistent toolbar below the Global Patient Header.
+    *   **FR-2.2.2:** The following tools MUST be directly visible on the toolbar without requiring a dropdown menu: Layout, Window Level, Length, ROI (Ellipse), Annotation, Pan, Zoom, Reset View.
+    *   **FR-2.2.3:** Toolbar buttons MUST have an enlarged target size of 40x40px.
+    *   **FR-2.2.4:** The system MUST conditionally display modality-specific tools (e.g., PET/CT Fusion, View PDF) on the toolbar only when a relevant study is active.
+*   **2.3. UI/UX Specification:**
+    *   **Layout:** Tools grouped logically (View, Measurement, Actions, Contextual) separated by subtle dividers.
+*   **2.4. Acceptance Criteria:**
+    *   Given a radiologist is viewing a standard MR study, THEN the primary tools are visible and the PET/CT Fusion button is hidden.
+    *   Given a PET/CT study is loaded, THEN the PET/CT Fusion button is visible on the toolbar.
+
+#### **FR-3: Study Comparison Highlighting**
+*   **3.1. Rationale:** When comparing multiple studies (e.g., current vs. prior), it can be difficult to distinguish which viewport belongs to which study, increasing the risk of misinterpretation.
+*   **3.2. Functional Requirements:**
+    *   **FR-3.2.1:** When viewports display images from more than one `StudyInstanceUID`, the system MUST apply a distinct visual treatment to each viewport based on its study context.
+    *   **FR-3.2.2:** The viewport border MUST change color to indicate its study context (e.g., one color for the current study, another for the prior study).
+    *   **FR-3.2.3:** The text overlay in each viewport's corner MUST include the `Study Date`.
+*   **3.3. UI/UX Specification:**
+    *   **Borders:** 2px solid border. Default: Neutral Gray (`--color-border`). Current Study: Primary Blue (`--color-primary`). Prior Study: Warning Amber (`--color-warning`).
+    *   **Overlay Text:** The `Study Date` text will dynamically adopt the color of its viewport's border for strong visual association.
+*   **3.4. Acceptance Criteria:**
+    *   Given a user drags a prior study into a 2x1 layout, THEN the current study's viewport border turns blue and the prior study's viewport border turns amber.
+    *   AND THEN the study date is visible and correctly colored in the corner of each respective viewport.
+
+#### **FR-4: "Scroll All" Virtual Series**
+*   **4.1. Rationale:** Clinicians often need to review all images in a study sequentially. The current UI requires clicking through each series individually, which is inefficient.
+*   **4.2. Functional Requirements:**
+    *   **FR-4.2.1:** For each study listed in the left-hand panel, the system MUST generate a synthetic series item titled "All Images."
+    *   **FR-4.2.2:** This "All Images" series MUST be displayed as the first item in the series list for its parent study.
+    *   **FR-4.2.3:** Selecting this series MUST load all image instances from all series within that study into the active viewport as a single, scrollable stack.
+*   **4.3. UI/UX Specification:**
+    *   The "All Images" series item should be visually distinct, perhaps with a unique icon (e.g., an infinity symbol `∞`).
+*   **4.4. Acceptance Criteria:**
+    *   Given a study with 3 series (20, 30, and 40 images), THEN the study panel shows a virtual "All Images" series with a count of 90.
+    *   AND when a user clicks it, they can scroll from image 1 to 90 without interruption.
+
+#### **FR-5: User-Configurable Hanging Protocols**
+*   **5.1. Rationale:** OHIF's powerful hanging protocol engine lacks a user-friendly interface, limiting its adoption to users comfortable with JSON configuration. A UI is needed to democratize this feature.
+*   **5.2. Functional Requirements:**
+    *   **FR-5.2.1:** The system MUST provide a user interface for creating, viewing, editing, and deleting custom hanging protocols.
+    *   **FR-5.2.2:** This UI MUST be accessible from the main viewer, for example, within the User Preferences modal.
+    *   **FR-5.2.3:** The UI MUST allow a user to define study-matching rules based on DICOM tags (e.g., Modality, Body Part Examined).
+    *   **FR-5.2.4:** The UI MUST allow a user to define a viewport layout (e.g., 2x2 grid) and specify series-matching criteria for each viewport cell.
+*   **5.3. UI/UX Specification:**
+    *   A new "Hanging Protocols" tab within the Preferences modal.
+    *   A two-pane layout: a list of saved protocols on the left, and the editor for the selected protocol on the right.
+    *   The editor will contain user-friendly form controls (dropdowns, text inputs) for defining rules and a visual grid for configuring the layout.
+*   **5.4. Acceptance Criteria:**
+    *   Given a user creates a protocol for "Knee MR" that specifies a 1x2 layout with "T1 Sag" on the left and "T2 Sag" on the right.
+    *   AND the user saves the protocol.
+    *   THEN when the user opens a new Knee MR study, it automatically displays in the specified 1x2 layout with the correct series.
+
+---
+
+### **4. Technical Implementation Strategy for OHIF v3**
+
+This section outlines the recommended technical approach for each feature, emphasizing the use of OHIF's extension framework.
+
+| Feature | OHIF Concept | Step-by-Step Summary |
+| :--- | :--- | :--- |
+| **Global Theming** | **CSS Overrides** | 1. Create a `theme.css` file in the custom extension. 2. Define your new `--color-*` values, mapping them to OHIF's `--default-color-*` variables. 3. Import this CSS file in `platform/viewer/src/index.js` *after* the default theme import. |
+| **FR-1: Patient Header** | **Component Registration** | 1. Create a `GlobalPatientHeader.js` React component. 2. In the extension's `preRegistration` hook, use `app.registerComponent` to register it to the predefined `slot: 'header'`. |
+| **FR-2: Toolbar Redesign** | **App Configuration** | 1. Modify the `toolbarButtons` array in `app-config.js`. 2. Reorder tools to flatten the hierarchy. 3. Add `customClassName: 'toolbar-button-enlarged'` to each button. 4. Use the `display: (context) => {...}` function to conditionally render modality-specific tools based on `context.services.DisplaySetService`. |
+| **FR-3: Study Highlighting** | **Component Shadowing** | 1. Create a `StudyAwareViewport.js` wrapper component. 2. Inside, use a Redux hook (`useSelector`) to get viewport state and determine the correct border color. 3. Render the default `<OHIFCornerstoneViewport>` inside your wrapper. 4. In the extension's `preRegistration` hook, use `app.registerComponent` to override the `id: 'OHIFCornerstoneViewport'` with your new wrapper component. |
+| **FR-4: "Scroll All"** | **Data Source Extension** | 1. Create a `CustomDataSource.js` class that `extends` the default `DICOMwebDataSource`. 2. Override the `mapStudies` method. In it, call `super.mapStudies`, then iterate through the results to create and prepend your virtual "All Images" series object to each study's `series` array. 3. Register your `CustomDataSource` class in your extension's `index.js` and configure `app-config.js` to use it. |
+| **FR-5: Hanging Protocols UI** | **Service Integration** | 1. Build a new `HangingProtocolEditor.js` React component. 2. Use `props.servicesManager` or a context hook to get access to the `HangingProtocolService`. 3. Use the service's methods (`getProtocols`, `add`, `update`) to read and write protocol configurations. 4. Use the `UIDialogService` to show your editor component within a new tab of the preferences modal. |
+
+---
+### **5. Appendix: Color Palette Reference**
+
+| Token Name | Hex Code | Description |
+| :--- | :--- | :--- |
+| `--color-primary` | `#60A5FA` | Primary interactive elements, focus rings, current study border. |
+| `--color-background`| `#111827` | Main application background. |
+| `--color-panel` | `#1F2937` | Background for side panels, toolbars, modals. |
+| `--color-text-primary`| `#F9FAFB` | Primary text color. |
+| `--color-text-secondary`|`#9CA3AF` | Secondary text, icons, less important info. |
+| `--color-border` | `#374151` | Default borders and dividers. |
+| `--color-warning` | `#FACC15` | Prior study border, warning notifications. |
+| `--color-success` | `#22C55E` | Success notifications. |
+| `--color-error` | `#F87171` | Error notifications. |

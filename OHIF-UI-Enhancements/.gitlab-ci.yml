@@ -1,0 +1,55 @@
+# GitLab CI Configuration for OHIF Performance Monitoring
+
+stages:
+  - build
+  - test
+  - performance
+  - report
+
+variables:
+  PERF_QUALITY_GATES: "true"
+  PERF_FAIL_ON_VIOLATION: "true"
+  PERF_REPORTING: "true"
+  PERF_REPORT_FORMATS: "json,junit,html"
+  PERF_STUDY_LOAD_THRESHOLD: "8000"
+  PERF_MEMORY_THRESHOLD: "1024"
+  PERF_ERROR_RATE_THRESHOLD: "0.01"
+  PERF_SCORE_THRESHOLD: "75"
+
+build:
+  stage: build
+  image: node:20-alpine
+  before_script:
+    - cd OHIF-UI-Enhancements
+    - npm ci
+  script:
+    - npm run build
+  artifacts:
+    paths:
+      - OHIF-UI-Enhancements/dist/
+    expire_in: 1 hour
+
+performance:chrome:
+  stage: performance
+  image: node:20
+  services:
+    - name: selenium/standalone-chrome:latest
+      alias: chrome
+  dependencies:
+    - build
+  before_script:
+    - cd OHIF-UI-Enhancements
+    - npm ci
+    - mkdir -p performance-reports
+  script:
+    - npm run test:performance
+  variables:
+    BROWSER: "chrome"
+    PERF_REPORT_DIR: "./performance-reports"
+  artifacts:
+    when: always
+    paths:
+      - OHIF-UI-Enhancements/performance-reports/
+    reports:
+      junit: OHIF-UI-Enhancements/performance-reports/junit.xml
+    expire_in: 30 days

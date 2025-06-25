@@ -1,0 +1,283 @@
+/**
+ * Performance-Optimized CSS for Study Comparison Highlighting
+ * 
+ * Task 3.4: Performance Optimization Implementation
+ * 
+ * Key optimizations:
+ * - GPU acceleration with transform3d
+ * - Reduced layout thrashing
+ * - Optimized animations
+ * - Container queries for efficiency
+ * - Hardware-accelerated effects
+ */
+
+/* Base study-aware viewport with GPU acceleration */
+.study-aware-viewport {
+  position: relative;
+  border-radius: 4px;
+  overflow: hidden;
+  
+  /* Force GPU layer to prevent layout thrashing */
+  transform: translateZ(0);
+  will-change: transform;
+  
+  /* Optimize transitions - only transform and opacity */
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Current Study Styling - GPU Optimized */
+.viewport-current-study {
+  /* Use box-shadow instead of border to avoid layout recalculation */
+  box-shadow: inset 0 0 0 3px var(--color-primary),
+              0 4px 6px -1px rgba(0, 0, 0, 0.4),
+              0 0 0 1px rgba(96, 165, 250, 0.3);
+  
+  /* Subtle background gradient without affecting layout */
+  background-image: linear-gradient(135deg, rgba(96, 165, 250, 0.05) 0%, transparent 50%);
+  background-attachment: local;
+}
+
+.viewport-current-study:hover {
+  /* Transform-only hover effect for GPU acceleration */
+  transform: translateY(-2px) translateZ(0);
+  
+  /* Update only box-shadow, not layout properties */
+  box-shadow: inset 0 0 0 3px rgba(96, 165, 250, 0.8),
+              0 8px 25px -5px rgba(0, 0, 0, 0.5),
+              0 0 0 2px rgba(96, 165, 250, 0.4);
+}
+
+/* Prior Study Styling - GPU Optimized */
+.viewport-prior-study {
+  /* Use box-shadow instead of border */
+  box-shadow: inset 0 0 0 3px var(--color-warning),
+              0 4px 6px -1px rgba(0, 0, 0, 0.4),
+              0 0 0 1px rgba(250, 204, 21, 0.3);
+  
+  background-image: linear-gradient(135deg, rgba(250, 204, 21, 0.05) 0%, transparent 50%);
+  background-attachment: local;
+}
+
+.viewport-prior-study:hover {
+  transform: translateY(-2px) translateZ(0);
+  
+  box-shadow: inset 0 0 0 3px rgba(250, 204, 21, 0.8),
+              0 8px 25px -5px rgba(0, 0, 0, 0.5),
+              0 0 0 2px rgba(250, 204, 21, 0.4);
+}
+
+/* Optimized Study Label Overlays */
+.viewport-overlay {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  line-height: 1.2;
+  z-index: 100;
+  pointer-events: none;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  
+  /* GPU acceleration for overlay */
+  transform: translate3d(0, 0, 0);
+  will-change: opacity;
+  
+  /* Optimized backdrop effect - removed expensive backdrop-filter */
+  background: rgba(17, 24, 39, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  
+  /* Smooth opacity transitions only */
+  transition: opacity 0.2s ease-out;
+}
+
+.viewport-overlay-current {
+  color: var(--color-primary);
+  border-color: rgba(96, 165, 250, 0.3);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.viewport-overlay-prior {
+  color: var(--color-warning);
+  border-color: rgba(250, 204, 21, 0.3);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+/* Animation for study type changes - optimized */
+.study-aware-viewport[data-study-type-changed="true"] {
+  animation: studyTypeChange 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes studyTypeChange {
+  0% { 
+    transform: translateZ(0) scale(1); 
+  }
+  50% { 
+    transform: translateZ(0) scale(1.01); 
+  }
+  100% { 
+    transform: translateZ(0) scale(1); 
+  }
+}
+
+/* Focus indicators for accessibility - optimized */
+.study-aware-viewport:focus-within {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  /* Use transform for focus indicator to avoid layout */
+  transform: translateZ(0);
+}
+
+/* Container queries for efficient responsive design */
+@container viewport (min-width: 300px) {
+  .viewport-overlay {
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+}
+
+@container viewport (max-width: 200px) {
+  .viewport-overlay {
+    font-size: 10px;
+    padding: 4px 6px;
+    top: 4px;
+    left: 4px;
+  }
+  
+  .viewport-current-study,
+  .viewport-prior-study {
+    box-shadow: inset 0 0 0 2px var(--color-primary),
+                0 2px 4px -1px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* High contrast mode support - optimized */
+@media (prefers-contrast: high) {
+  .viewport-current-study {
+    box-shadow: inset 0 0 0 4px var(--color-primary),
+                0 4px 6px -1px rgba(0, 0, 0, 0.6);
+  }
+  
+  .viewport-prior-study {
+    box-shadow: inset 0 0 0 4px var(--color-warning),
+                0 4px 6px -1px rgba(0, 0, 0, 0.6);
+  }
+  
+  .viewport-overlay {
+    background: rgba(0, 0, 0, 0.95);
+    border-width: 2px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .study-aware-viewport,
+  .viewport-overlay {
+    transition: none;
+    animation: none;
+  }
+  
+  .viewport-current-study:hover,
+  .viewport-prior-study:hover {
+    transform: translateZ(0); /* No movement */
+  }
+  
+  .study-aware-viewport[data-study-type-changed="true"] {
+    animation: none;
+  }
+}
+
+/* Touch device optimizations - no hover effects */
+@media (hover: none) and (pointer: coarse) {
+  .viewport-current-study:hover,
+  .viewport-prior-study:hover {
+    transform: translateZ(0);
+    box-shadow: inset 0 0 0 3px var(--color-primary),
+                0 4px 6px -1px rgba(0, 0, 0, 0.4);
+  }
+}
+
+/* Multi-viewport grid integration - optimized spacing */
+.viewport-grid .study-aware-viewport {
+  margin: 2px;
+}
+
+.viewport-grid .study-aware-viewport:first-child {
+  margin-left: 0;
+}
+
+.viewport-grid .study-aware-viewport:last-child {
+  margin-right: 0;
+}
+
+/* Performance optimization classes */
+.viewport-hidden {
+  /* Efficiently hide off-screen viewports */
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.viewport-loading {
+  /* Loading state with minimal visual impact */
+  opacity: 0.7;
+  transition: opacity 0.2s ease-out;
+}
+
+/* Dark mode optimizations */
+@media (prefers-color-scheme: dark) {
+  .viewport-overlay {
+    background: rgba(0, 0, 0, 0.95);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+}
+
+/* Print media optimization */
+@media print {
+  .study-aware-viewport {
+    box-shadow: none !important;
+    transform: none !important;
+    background: white !important;
+    border: 2px solid black !important;
+  }
+  
+  .viewport-overlay {
+    position: static !important;
+    background: white !important;
+    color: black !important;
+    border: 1px solid black !important;
+    margin-bottom: 4px;
+  }
+}
+
+/* Performance monitoring classes for development */
+.study-aware-viewport[data-performance-mode="debug"] {
+  border-top: 2px solid lime;
+}
+
+.study-aware-viewport[data-performance-mode="debug"]::after {
+  content: attr(data-study-confidence);
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: lime;
+  color: black;
+  padding: 2px 4px;
+  font-size: 10px;
+  font-weight: bold;
+  z-index: 1000;
+}
+
+/* Optimized transitions for better performance */
+.study-aware-viewport * {
+  /* Prevent unnecessary transitions on child elements */
+  transition: none;
+}
+
+.study-aware-viewport > .viewport-overlay {
+  /* Only allow necessary transitions */
+  transition: opacity 0.2s ease-out;
+} 

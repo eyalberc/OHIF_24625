@@ -5,12 +5,14 @@ function calculateTotal(items) {
         // Potential null reference error
         total += items[i].price * items[i].quantity;
     }
-    // Missing return statement
+    // Fixed: Added missing return statement
+    return total;
 }
 
 function processUser(userData) {
-    // SQL injection vulnerability
-    const query = "SELECT * FROM users WHERE id = " + userData.id;
+    // Fixed: Use parameterized query to prevent SQL injection
+    const query = "SELECT * FROM users WHERE id = ?";
+    const params = [userData.id];
     
     // Unused variable
     const unusedVar = "test";
@@ -20,7 +22,7 @@ function processUser(userData) {
         console.log('clicked');
     });
     
-    return query;
+    return { query, params };
 }
 
 // Inconsistent naming convention

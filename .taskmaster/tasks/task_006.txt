@@ -1,0 +1,81 @@
+# Task ID: 6
+# Title: Map PRD Color Palette to OHIF Theme System
+# Status: pending
+# Dependencies: 1
+# Priority: medium
+# Description: Integrate the PRD color specifications into the existing OHIF theme system in the platform/ui-next/src/tailwind.css file, ensuring compatibility with the medical imaging color requirements and Tailwind CSS integration.
+# Details:
+This task involves mapping the PRD color palette to the existing OHIF theme system while maintaining compatibility with the medical imaging requirements. The implementation should focus on enhancing the current system rather than creating a new theme system.
+
+Key implementation steps:
+
+1. **Analyze Existing Theme Structure**:
+   - Review the current theme implementation in `platform/ui-next/src/tailwind.css`
+   - Document the existing CSS custom properties used for theming
+   - Identify the current color variables and their usage across the application
+
+2. **Map PRD Colors to Existing Variables**:
+   - Create a comprehensive mapping between PRD color specifications and existing OHIF theme variables
+   - Update the CSS custom properties in `tailwind.css` to reflect the PRD colors while maintaining the existing variable structure
+   - Ensure backward compatibility with components using the current theme variables
+
+3. **Add Missing PRD Colors**:
+   - Implement missing color variables for PRD-specified colors not currently in the theme
+   - Add warning color (#FACC15) and any other missing colors identified in the PRD
+   - Document all new color variables added to the system
+
+4. **Update Tailwind Configuration**:
+   - Modify the Tailwind configuration to recognize and use the updated/new color variables
+   - Ensure the theme extension mechanism in Tailwind properly incorporates the CSS custom properties
+   - Verify that Tailwind utility classes correctly reflect the updated color palette
+
+5. **Validate Color Consistency**:
+   - Perform a systematic review of all UI components to ensure they use the updated color variables
+   - Check for any hardcoded color values that should be replaced with theme variables
+   - Create a color audit document listing all components and their color usage
+
+6. **Implement Dark Theme Compatibility**:
+   - Verify that all color variables have appropriate dark theme alternatives
+   - Ensure dark theme colors comply with medical imaging requirements (proper contrast for image viewing)
+   - Test color accessibility in dark mode for critical medical imaging interfaces
+
+7. **Documentation Updates**:
+   - Update the theme documentation to reflect the new color palette
+   - Create a color reference guide showing the mapping between PRD colors and theme variables
+   - Document any migration steps for developers working with the theme system
+
+# Test Strategy:
+1. **Visual Regression Testing**:
+   - Create before/after screenshots of all major UI components with the updated color palette
+   - Compare screenshots to verify visual consistency and proper color application
+   - Document any visual differences and ensure they align with PRD requirements
+
+2. **Theme Variable Validation**:
+   - Create a script to extract all CSS custom properties from the codebase
+   - Verify that all PRD colors are properly defined as CSS custom properties
+   - Check that no color values are hardcoded in component styles
+
+3. **Component Testing**:
+   - Test each UI component with both light and dark themes
+   - Verify that components correctly use theme variables instead of hardcoded colors
+   - Ensure dynamic theme switching works correctly for all components
+
+4. **Accessibility Testing**:
+   - Use automated tools (like Axe or Lighthouse) to verify color contrast compliance
+   - Test color accessibility specifically for medical imaging interfaces
+   - Verify that the dark theme meets medical imaging requirements for contrast and readability
+
+5. **Browser Compatibility Testing**:
+   - Test the updated theme system across all supported browsers
+   - Verify that CSS custom properties are correctly interpreted in all target browsers
+   - Check for any browser-specific rendering issues with the updated colors
+
+6. **Integration Testing with Tailwind**:
+   - Verify that Tailwind utility classes correctly use the updated color palette
+   - Test custom Tailwind directives and plugins with the new color system
+   - Ensure that the build process correctly processes the theme variables
+
+7. **Documentation Verification**:
+   - Review updated documentation for accuracy and completeness
+   - Verify that the color reference guide correctly maps PRD colors to theme variables
+   - Ensure developers can easily understand how to use the updated theme system
