@@ -13,25 +13,77 @@ interface GlobalPatientHeaderProps {
 /**
  * FR-1: Global Patient Header
  * Persistent header showing patient information to prevent clinical errors
+ * Updated to use correct OHIF v3 DicomMetadataStore service
  */
 const GlobalPatientHeader: React.FC<GlobalPatientHeaderProps> = ({ servicesManager }) => {
   const [patientData, setPatientData] = useState<PatientData | null>(null);
 
-  useEffect(() => {
-    // Use OHIF's StudyService to get current patient data
-    if (servicesManager?.services?.StudyService) {
-      const studyService = servicesManager.services.StudyService;
-      const studies = studyService.getStudies();
-      
-      if (studies && studies.length > 0) {
-        const currentStudy = studies[0];
-        setPatientData({
-          PatientName: currentStudy.PatientName,
-          PatientID: currentStudy.PatientID,
-          PatientBirthDate: currentStudy.PatientBirthDate,
-        });
+  // Function to update patient data from study
+  const updatePatientDataFromStudy = (studyInstanceUID?: string) => {
+    if (!servicesManager?.services?.DicomMetadataStore) return;
+    
+    const { DicomMetadataStore } = servicesManager.services;
+    let study;
+    
+    if (studyInstanceUID) {
+      study = DicomMetadataStore.getStudy(studyInstanceUID);
+    } else {
+      // Get the first available study
+      const studyUIDs = DicomMetadataStore.getStudyInstanceUIDs();
+      if (studyUIDs.length > 0) {
+        study = DicomMetadataStore.getStudy(studyUIDs[0]);
       }
     }
+    
+    if (study) {
+      setPatientData({
+        PatientName: study.PatientName,
+        PatientID: study.PatientID,
+        PatientBirthDate: study.PatientBirthDate || study.StudyDate,
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (!servicesManager?.services?.DicomMetadataStore) return;
+    
+    const { DicomMetadataStore } = servicesManager.services;
+    
+    // Initial data load
+    updatePatientDataFromStudy();
+    
+    // Subscribe to study events for real-time updates
+    const handleStudyAdded = (event: any) => {
+      updatePatientDataFromStudy(event.StudyInstanceUID);
+    };
+    
+    const handleInstancesAdded = (event: any) => {
+      updatePatientDataFromStudy(event.StudyInstanceUID);
+    };
+    
+    // Subscribe to DicomMetadataStore events
+    DicomMetadataStore.subscribe(
+      DicomMetadataStore.EVENTS.STUDY_ADDED,
+      handleStudyAdded
+    );
+    
+    DicomMetadataStore.subscribe(
+      DicomMetadataStore.EVENTS.INSTANCES_ADDED,
+      handleInstancesAdded
+    );
+    
+    // Cleanup subscriptions on unmount
+    return () => {
+      DicomMetadataStore.unsubscribe(
+        DicomMetadataStore.EVENTS.STUDY_ADDED,
+        handleStudyAdded
+      );
+      
+      DicomMetadataStore.unsubscribe(
+        DicomMetadataStore.EVENTS.INSTANCES_ADDED,
+        handleInstancesAdded
+      );
+    };
   }, [servicesManager]);
 
   // Format patient birth date for display
@@ -61,7 +113,7 @@ const GlobalPatientHeader: React.FC<GlobalPatientHeaderProps> = ({ servicesManag
 
   if (!patientData) {
     return (
-      <div className="global-patient-header">
+      <div className="global-patient-header" role="banner" aria-label="Patient Information Header">
         <div className="patient-info">
           <div className="patient-name">No Patient Selected</div>
         </div>
@@ -69,9 +121,10 @@ const GlobalPatientHeader: React.FC<GlobalPatientHeaderProps> = ({ servicesManag
           <button 
             onClick={handlePreferences}
             className="preferences-btn"
-            title="Preferences"
+            title="User Preferences"
+            aria-label="Open user preferences"
           >
-            ⚙️
+            <span role="img" aria-hidden="true">⚙️</span>
           </button>
         </div>
       </div>
@@ -79,12 +132,12 @@ const GlobalPatientHeader: React.FC<GlobalPatientHeaderProps> = ({ servicesManag
   }
 
   return (
-    <div className="global-patient-header">
+    <div className="global-patient-header" role="banner" aria-label="Patient Information Header">
       <div className="patient-info">
-        <div className="patient-name">
+        <div className="patient-name" style={{ fontSize: '16px', fontWeight: '600' }}>
           {patientData.PatientName || 'Unknown Patient'}
         </div>
-        <div className="patient-demographics">
+        <div className="patient-demographics" style={{ fontSize: '14px' }}>
           <span>MRN: {patientData.PatientID || 'N/A'}</span>
           <span>{formatBirthDate(patientData.PatientBirthDate)}</span>
         </div>
@@ -95,15 +148,17 @@ const GlobalPatientHeader: React.FC<GlobalPatientHeaderProps> = ({ servicesManag
           onClick={handlePreferences}
           className="preferences-btn"
           title="User Preferences"
+          aria-label="Open user preferences"
         >
-          ⚙️
+          <span role="img" aria-hidden="true">⚙️</span>
         </button>
         <button 
           onClick={() => window.close()}
           className="exit-btn"
           title="Exit Application"
+          aria-label="Exit application"
         >
-          ✕
+          <span role="img" aria-hidden="true">✕</span>
         </button>
       </div>
     </div>

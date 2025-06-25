@@ -8,6 +8,10 @@
       "version": "3.0.0"
     },
     {
+      "packageName": "@ohif/extension-ui-enhancements",
+      "version": "3.11.0-beta.58"
+    },
+    {
       "packageName": "@ohif/extension-measurement-tracking",
       "default": false,
       "version": "3.0.0"

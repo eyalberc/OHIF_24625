@@ -118,6 +118,45 @@ const screenShotPaths = {
     jumpToMeasurementAfterSeriesChange:
       'jumpToMeasurementMPR-jumpToMeasurementAfterSeriesChange.png',
   },
+  // UI Enhancements Visual Regression Tests
+  globalPatientHeader: {
+    headerDefaultState: 'globalPatientHeader-defaultState.png',
+    headerWithPatientData: 'globalPatientHeader-withPatientData.png',
+    headerMobileResponsive: 'globalPatientHeader-mobileResponsive.png',
+    headerTabletResponsive: 'globalPatientHeader-tabletResponsive.png',
+    headerTypographyCompliance: 'globalPatientHeader-typographyCompliance.png',
+  },
+  studyComparison: {
+    currentStudyBorder: 'studyComparison-currentStudyBorder.png',
+    priorStudyBorder: 'studyComparison-priorStudyBorder.png',
+    studyOverlayDisplay: 'studyComparison-studyOverlayDisplay.png',
+    hoverInteractions: 'studyComparison-hoverInteractions.png',
+    multiViewportGrid: 'studyComparison-multiViewportGrid.png',
+    borderStyleAccuracy: 'studyComparison-borderStyleAccuracy.png',
+    overlayPositioning: 'studyComparison-overlayPositioning.png',
+  },
+  enhancedToolbar: {
+    toolbarDefaultState: 'enhancedToolbar-defaultState.png',
+    buttonSizing40px: 'enhancedToolbar-buttonSizing40px.png',
+    petCtModalityTools: 'enhancedToolbar-petCtModalityTools.png',
+    pdfDocumentTools: 'enhancedToolbar-pdfDocumentTools.png',
+    toolGroupHierarchy: 'enhancedToolbar-toolGroupHierarchy.png',
+    overflowBehavior: 'enhancedToolbar-overflowBehavior.png',
+    modalitySwitching: 'enhancedToolbar-modalitySwitching.png',
+  },
+  themeSystem: {
+    prdColorPalette: 'themeSystem-prdColorPalette.png',
+    darkModeOptimization: 'themeSystem-darkModeOptimization.png',
+    highContrastMode: 'themeSystem-highContrastMode.png',
+    colorVariableAccuracy: 'themeSystem-colorVariableAccuracy.png',
+  },
+  uiIntegration: {
+    headerToolbarLayout: 'uiIntegration-headerToolbarLayout.png',
+    fullViewportIntegration: 'uiIntegration-fullViewportIntegration.png',
+    responsiveBreakpoints: 'uiIntegration-responsiveBreakpoints.png',
+    multiStudyComparison: 'uiIntegration-multiStudyComparison.png',
+    accessibilityFeatures: 'uiIntegration-accessibilityFeatures.png',
+  },
 };
 
 export { screenShotPaths };

@@ -1,0 +1,124 @@
+# Task ID: 2
+# Title: Complete Enhanced Toolbar Implementation
+# Status: pending
+# Dependencies: 1
+# Priority: high
+# Description: Complete and validate the enhanced toolbar implementation in the UI extensions module, focusing on button sizing, tool visibility logic, hierarchy design, and dynamic tool management.
+# Details:
+This task involves completing the existing foundation of the enhanced toolbar implementation in `extensions/ui-enhancements/src/getToolbarModule.tsx`. The implementation should adhere to the following requirements:
+
+1. **Button Sizing Implementation**:
+   - Modify the toolbar button components to support the 40px sizing requirement
+   - Ensure consistent sizing across all toolbar buttons
+   - Update CSS/styling to accommodate the new size requirements
+   - Verify that the sizing works correctly in different viewport configurations
+
+2. **Modality-Specific Tool Visibility Logic**:
+   - Implement conditional logic to show/hide tools based on the active modality
+   - Create a mapping between tools and supported modalities
+   - Add hooks to detect the current modality from the OHIF core
+   - Ensure smooth transitions when switching between modalities
+
+3. **Flattened Hierarchy Design**:
+   - Complete the implementation of the flattened toolbar hierarchy
+   - Ensure proper nesting of tool groups while maintaining a clean UI
+   - Implement proper state management for expanded/collapsed tool groups
+   - Verify that the hierarchy is intuitive and matches the design specifications
+
+4. **ToolbarService Integration**:
+   - Enhance the integration with ToolbarService for dynamic tool management
+   - Implement proper registration and deregistration of tools
+   - Add support for runtime tool priority adjustments
+   - Ensure the toolbar responds correctly to tool state changes
+
+5. **Code Organization**:
+   - Refactor any temporary or placeholder code in the existing implementation
+   - Ensure proper TypeScript typing throughout the implementation
+   - Add comprehensive JSDoc comments for public methods and interfaces
+   - Follow the project's coding standards and patterns
+
+The implementation should build upon the existing foundation rather than creating new components from scratch. Coordinate with the Global Patient Header implementation to ensure consistent UI/UX across the application.
+
+# Test Strategy:
+1. **Component Testing**:
+   - Write unit tests for the toolbar component using React Testing Library
+   - Test button rendering with different size configurations
+   - Verify that modality-specific visibility logic works as expected
+   - Test the flattened hierarchy implementation for proper nesting and state management
+
+2. **Integration Testing**:
+   - Test the toolbar's integration with the ToolbarService
+   - Verify that tools register and deregister correctly
+   - Test dynamic priority adjustments and their effect on the toolbar layout
+   - Ensure the toolbar responds correctly to changes in the application state
+
+3. **Visual Regression Testing**:
+   - Create baseline screenshots of the toolbar in different states
+   - Compare against new implementations to catch unintended visual changes
+   - Test across different viewport sizes to ensure responsive behavior
+
+4. **User Scenario Testing**:
+   - Test common user workflows that involve toolbar interactions
+   - Verify that tool selection and activation work as expected
+   - Test modality switching and its effect on available tools
+   - Ensure that the toolbar behaves correctly during study navigation
+
+5. **Performance Testing**:
+   - Measure render times for the toolbar with various numbers of tools
+   - Verify that dynamic updates don't cause performance degradation
+   - Test memory usage during extended toolbar interactions
+
+6. **Accessibility Testing**:
+   - Verify keyboard navigation through toolbar items
+   - Test screen reader compatibility
+   - Ensure proper focus management during toolbar interactions
+
+# Subtasks:
+## 1. Implement Button Sizing Logic [pending]
+### Dependencies: None
+### Description: Develop logic to support different button sizes (large, medium, small) in the toolbar, ensuring visual hierarchy and prominence for key actions.
+### Details:
+Reference design guidelines to ensure large buttons highlight primary actions, with medium and small buttons for secondary and tertiary actions. Ensure sizing is responsive and consistent across modalities.
+
+## 2. Configure Modality-Specific Tool Visibility [pending]
+### Dependencies: 2.1
+### Description: Implement dynamic visibility of toolbar tools based on the current modality or context.
+### Details:
+Ensure that only relevant tools are visible or enabled for each modality, following contextual group guidelines. Disabled tools should remain visible but inactive where appropriate.
+
+## 3. Design Toolbar Hierarchy and Grouping [pending]
+### Dependencies: 2.2
+### Description: Establish a logical hierarchy and grouping of toolbar controls for clarity and usability.
+### Details:
+Group related controls into labeled sections, ensuring primary actions are prominent and overflow menus are used for excess actions. Follow best practices for grouping and labeling.
+
+## 4. Integrate ToolbarService [pending]
+### Dependencies: 2.3
+### Description: Connect the toolbar component with the ToolbarService for state management and dynamic updates.
+### Details:
+Ensure the toolbar responds to service-driven changes, such as tool activation, visibility, and configuration updates.
+
+## 5. Refactor and Organize Toolbar Codebase [pending]
+### Dependencies: 2.4
+### Description: Restructure the toolbar code for maintainability, modularity, and scalability.
+### Details:
+Organize components, services, and utility functions. Ensure clear separation of concerns and adherence to project architecture standards.
+
+## 6. Develop Unit and Integration Tests [pending]
+### Dependencies: 2.5
+### Description: Write comprehensive unit and integration tests for toolbar logic, service integration, and UI behavior.
+### Details:
+Test button sizing, tool visibility, hierarchy, and service interactions. Ensure coverage for edge cases and error handling.
+
+## 7. Conduct Visual Regression Testing [pending]
+### Dependencies: None
+### Description: Implement visual regression tests to detect unintended UI changes across toolbar states and modalities.
+### Details:
+Capture baseline screenshots and compare against future builds. Validate correct rendering of button sizes, groupings, and overflow behavior.
+
+## 8. Validate Accessibility Compliance [pending]
+### Dependencies: None
+### Description: Ensure the toolbar meets accessibility standards, including keyboard navigation, ARIA roles, and tooltips.
+### Details:
+Test with screen readers, verify focus management, and confirm all controls are accessible via keyboard. Provide descriptive tooltips for all toolbar buttons.
+

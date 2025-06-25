@@ -1,0 +1,130 @@
+name: Performance Monitoring
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  schedule:
+    # Run daily at 2 AM UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      scenarios:
+        description: 'Test scenarios to run (comma-separated)'
+        required: false
+        default: 'small,medium,large'
+
+env:
+  # Performance monitoring configuration
+  PERF_QUALITY_GATES: true
+  PERF_FAIL_ON_VIOLATION: true
+  PERF_REPORTING: true
+  PERF_REPORT_FORMATS: json,junit,html,markdown
+  PERF_PUBLISH_ARTIFACTS: true
+  
+  # Performance thresholds
+  PERF_STUDY_LOAD_THRESHOLD: 8000
+  PERF_MEMORY_THRESHOLD: 1024
+  PERF_ERROR_RATE_THRESHOLD: 0.01
+  PERF_SCORE_THRESHOLD: 75
+  PERF_FRAME_RATE_THRESHOLD: 25
+  PERF_REGRESSION_THRESHOLD: 0.15
+
+jobs:
+  performance-test:
+    name: Performance Testing
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+        browser: [chrome, firefox]
+      fail-fast: false
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: |
+        cd OHIF-UI-Enhancements
+        npm ci
+    
+    - name: Build application
+      run: |
+        cd OHIF-UI-Enhancements
+        npm run build
+    
+    - name: Run performance benchmarks
+      id: performance-test
+      run: |
+        cd OHIF-UI-Enhancements
+        mkdir -p performance-reports
+        npm run test:performance
+      env:
+        BROWSER: ${{ matrix.browser }}
+        PERF_REPORT_DIR: ./performance-reports
+    
+    - name: Upload performance reports
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: performance-reports-${{ matrix.node-version }}-${{ matrix.browser }}
+        path: OHIF-UI-Enhancements/performance-reports/
+        retention-days: 30
+    
+    - name: Publish test results
+      uses: dorny/test-reporter@v1
+      if: always()
+      with:
+        name: Performance Tests (${{ matrix.node-version }}, ${{ matrix.browser }})
+        path: OHIF-UI-Enhancements/performance-reports/junit.xml
+        reporter: java-junit
+
+  performance-summary:
+    name: Performance Summary
+    runs-on: ubuntu-latest
+    needs: performance-test
+    if: always()
+    
+    steps:
+    - name: Download all performance reports
+      uses: actions/download-artifact@v4
+      with:
+        pattern: performance-reports-*
+        path: ./all-reports/
+    
+    - name: Generate performance summary
+      run: |
+        echo "# Performance Testing Summary" > performance-summary.md
+        echo "## Test Results" >> performance-summary.md
+        
+        for report_dir in ./all-reports/performance-reports-*; do
+          if [ -d "$report_dir" ]; then
+            config=$(basename "$report_dir" | sed 's/performance-reports-//')
+            echo "### $config" >> performance-summary.md
+            
+            if [ -f "$report_dir/performance-report.md" ]; then
+              cat "$report_dir/performance-report.md" >> performance-summary.md
+            else
+              echo "❌ No report found" >> performance-summary.md
+            fi
+            echo "" >> performance-summary.md
+          fi
+        done
+    
+    - name: Upload performance summary
+      uses: actions/upload-artifact@v4
+      with:
+        name: performance-summary
+        path: performance-summary.md

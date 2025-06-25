@@ -14,7 +14,7 @@
     --neutral-dark: 214 16% 21%;
     --background: 236 62% 5%;
     --foreground: 0 0% 98%;
-    --card: 234 64% 10%;
+    --card: 220 43% 18%;
     --card-foreground: 0 0% 98%;
     --popover: 219 90% 15%;
     --popover-foreground: 0 0% 98%;
@@ -23,12 +23,12 @@
     --secondary: 214 66% 48%;
     --secondary-foreground: 200 50% 84%;
     --muted: 234 64% 10%;
-    --muted-foreground: 200 46% 65%;
+    --muted-foreground: 220 9% 65%;
     --accent: 217 79% 24%;
     --accent-foreground: 0 0% 98%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14.9%;
+    --border: 220 20% 27%;
     --input: 236 52% 30%;
     --ring: 214 98% 60%;
     --chart-1: 220 70% 50%;
@@ -52,12 +52,29 @@
     --error-bg: hsl(359, 100%, 97%);
     --error-border: hsl(359, 100%, 94%);
     --error-text: hsl(360, 100%, 45%);
+
+    /* PRD-specific color additions */
+    --warning: 48 96% 53%;
+    --success: 142 71% 45%;
+    --error: 0 84% 71%;
+    --text-secondary: 220 9% 65%;
+
+    /* PRD color aliases for explicit usage */
+    --color-primary: 214 98% 60%;
+    --color-background: 236 62% 5%;
+    --color-panel: 220 43% 18%;
+    --color-text-primary: 0 0% 98%;
+    --color-text-secondary: 220 9% 65%;
+    --color-border: 220 20% 27%;
+    --color-warning: 48 96% 53%;
+    --color-success: 142 71% 45%;
+    --color-error: 0 84% 71%;
   }
 
   .dark {
     --background: 0 0% 3.9%;
     --foreground: 0 0% 98%;
-    --card: 234 64% 10%;
+    --card: 220 43% 18%;
     --card-foreground: 0 0% 98%;
     --popover: 0 0% 3.9%;
     --popover-foreground: 0 0% 98%;
@@ -66,12 +83,12 @@
     --secondary: 0 0% 14.9%;
     --secondary-foreground: 0 0% 98%;
     --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
+    --muted-foreground: 220 9% 65%;
     --accent: 0 0% 14.9%;
     --accent-foreground: 0 0% 98%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14.9%;
+    --border: 220 20% 27%;
     --input: 236 52% 30%;
     --ring: 214 98% 60%;
     --chart-1: 220 70% 50%;
@@ -79,6 +96,23 @@
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
+
+    /* PRD-specific colors for dark mode */
+    --warning: 48 96% 53%;
+    --success: 142 71% 45%;
+    --error: 0 84% 71%;
+    --text-secondary: 220 9% 65%;
+
+    /* PRD color aliases for dark mode */
+    --color-primary: 214 98% 60%;
+    --color-background: 0 0% 3.9%;
+    --color-panel: 220 43% 18%;
+    --color-text-primary: 0 0% 98%;
+    --color-text-secondary: 220 9% 65%;
+    --color-border: 220 20% 27%;
+    --color-warning: 48 96% 53%;
+    --color-success: 142 71% 45%;
+    --color-error: 0 84% 71%;
   }
 }
 
@@ -255,4 +289,407 @@ input[type='number']::-webkit-outer-spin-button {
 
 input[type='number'] {
   -moz-appearance: textfield; /* For Firefox */
+}
+
+/* Enhanced Toolbar Accessibility Styles - Task 2.8 */
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+  .enhanced-toolbar-button {
+    border: 2px solid currentColor !important;
+    background-color: Canvas !important;
+    color: CanvasText !important;
+  }
+  
+  .enhanced-toolbar-button:hover {
+    background-color: Highlight !important;
+    color: HighlightText !important;
+  }
+  
+  .enhanced-toolbar-button:focus {
+    outline: 3px solid Highlight !important;
+    outline-offset: 2px !important;
+  }
+  
+  .enhanced-toolbar-separator {
+    border-color: CanvasText !important;
+    opacity: 1 !important;
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .enhanced-toolbar-button,
+  .enhanced-toolbar-separator,
+  .enhanced-toolbar {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* Focus Management for Keyboard Navigation */
+.enhanced-toolbar {
+  /* Ensure toolbar is focusable container */
+  display: flex;
+  align-items: center;
+  background: var(--ohif-color-surface-dark);
+  border-bottom: 1px solid var(--ohif-color-border);
+  padding: 8px 16px;
+  gap: 8px;
+  position: relative;
+}
+
+.enhanced-toolbar:focus-within {
+  /* Visual indication when toolbar has focus */
+  box-shadow: inset 0 0 0 2px var(--ohif-color-primary);
+}
+
+/* Enhanced Button Accessibility Styles */
+.enhanced-toolbar-button {
+  /* Base button styling with accessibility considerations */
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  
+  /* FR-2.2.3: 40x40px button sizing */
+  min-width: 40px;
+  min-height: 40px;
+  width: 40px;
+  height: 40px;
+  
+  /* Enhanced styling */
+  background: var(--ohif-color-surface-medium);
+  border: 1px solid var(--ohif-color-border);
+  border-radius: 4px;
+  
+  /* Typography */
+  color: var(--ohif-color-text-primary);
+  font-size: 12px;
+  font-weight: 500;
+  
+  /* Smooth transitions for better UX */
+  transition: all 0.15s ease-in-out;
+  
+  /* Cursor styling */
+  cursor: pointer;
+}
+
+/* Focus States - Essential for Keyboard Navigation */
+.enhanced-toolbar-button:focus {
+  /* Primary focus style */
+  outline: 2px solid var(--ohif-color-primary);
+  outline-offset: 2px;
+  z-index: 1;
+  
+  /* Enhanced background for visibility */
+  background: var(--ohif-color-surface-light);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.enhanced-toolbar-button:focus-visible {
+  /* For browsers that support focus-visible */
+  outline: 2px solid var(--ohif-color-primary);
+  outline-offset: 2px;
+}
+
+/* Active/Pressed States for Screen Reader Context */
+.enhanced-toolbar-button[aria-pressed="true"] {
+  background: var(--ohif-color-primary);
+  color: var(--ohif-color-text-on-primary);
+  border-color: var(--ohif-color-primary);
+  
+  /* Visual indication of active state */
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+  transform: translateY(1px);
+}
+
+.enhanced-toolbar-button[aria-pressed="true"]:focus {
+  outline-color: var(--ohif-color-secondary);
+  background: var(--ohif-color-primary-dark);
+}
+
+/* Disabled States with Accessibility Considerations */
+.enhanced-toolbar-button[aria-disabled="true"] {
+  background: var(--ohif-color-surface-disabled);
+  color: var(--ohif-color-text-disabled);
+  border-color: var(--ohif-color-border-disabled);
+  cursor: not-allowed;
+  opacity: 0.6;
+  
+  /* Remove interactions */
+  pointer-events: none;
+  transform: none;
+}
+
+.enhanced-toolbar-button[aria-disabled="true"]:focus {
+  outline: none;
+}
+
+/* Hover States - Secondary to Focus */
+.enhanced-toolbar-button:hover:not([aria-disabled="true"]):not(:focus) {
+  background: var(--ohif-color-surface-light);
+  border-color: var(--ohif-color-border-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Group Separators with Accessibility Context */
+.enhanced-toolbar-separator {
+  width: 1px;
+  height: 24px;
+  background: var(--ohif-color-border);
+  opacity: 0.6;
+  margin: 0 8px;
+  flex-shrink: 0;
+  
+  /* Screen reader context */
+  position: relative;
+}
+
+.enhanced-toolbar-separator::before {
+  content: "";
+  position: absolute;
+  top: -8px;
+  bottom: -8px;
+  left: -4px;
+  right: -4px;
+  /* Invisible but provides larger hit area for screen readers */
+}
+
+/* Keyboard Navigation Enhancement */
+.enhanced-toolbar-button[tabindex="0"] {
+  /* Current focused button in keyboard navigation */
+  position: relative;
+}
+
+.enhanced-toolbar-button[tabindex="-1"] {
+  /* Non-focused buttons in keyboard navigation */
+  position: relative;
+}
+
+/* Visual Group Indicators */
+.enhanced-toolbar-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  position: relative;
+}
+
+.enhanced-toolbar-group::after {
+  content: attr(aria-label);
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  
+  /* Tooltip styling */
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  white-space: nowrap;
+  
+  /* Initially hidden */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease-in-out;
+  z-index: 1000;
+  margin-top: 8px;
+}
+
+.enhanced-toolbar-group:hover::after,
+.enhanced-toolbar-group:focus-within::after {
+  opacity: 1;
+}
+
+/* Tooltips for Individual Buttons */
+.enhanced-toolbar-button::after {
+  content: attr(aria-label);
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  
+  /* Tooltip styling */
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  
+  /* Initially hidden */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease-in-out;
+  z-index: 1001;
+  margin-top: 8px;
+  
+  /* Prevent overflow */
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.enhanced-toolbar-button:hover::after,
+.enhanced-toolbar-button:focus::after {
+  opacity: 1;
+}
+
+/* Screen Reader Only Content */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Screen Reader Announcements Area */
+#toolbar-screen-reader-announcer {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* Loading States for Accessibility */
+.enhanced-toolbar-button[aria-busy="true"] {
+  position: relative;
+  pointer-events: none;
+}
+
+.enhanced-toolbar-button[aria-busy="true"]::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 16px;
+  height: 16px;
+  margin: -8px 0 0 -8px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Error States */
+.enhanced-toolbar-button[aria-invalid="true"] {
+  border-color: var(--ohif-color-error);
+  background: var(--ohif-color-error-light);
+  color: var(--ohif-color-error-dark);
+}
+
+.enhanced-toolbar-button[aria-invalid="true"]:focus {
+  outline-color: var(--ohif-color-error);
+}
+
+/* Success States */
+.enhanced-toolbar-button[data-state="success"] {
+  border-color: var(--ohif-color-success);
+  background: var(--ohif-color-success-light);
+  color: var(--ohif-color-success-dark);
+}
+
+/* Print Styles for Accessibility Documentation */
+@media print {
+  .enhanced-toolbar {
+    border: 1px solid black;
+    background: white;
+  }
+  
+  .enhanced-toolbar-button {
+    border: 1px solid black;
+    background: white;
+    color: black;
+  }
+  
+  .enhanced-toolbar-button[aria-pressed="true"] {
+    background: black;
+    color: white;
+  }
+  
+  .enhanced-toolbar-button[aria-disabled="true"] {
+    background: #f0f0f0;
+    color: #666;
+  }
+}
+
+/* Force Colors Mode (Windows High Contrast) */
+@media (forced-colors: active) {
+  .enhanced-toolbar {
+    background: Canvas;
+    border-color: ButtonBorder;
+  }
+  
+  .enhanced-toolbar-button {
+    background: ButtonFace;
+    color: ButtonText;
+    border-color: ButtonBorder;
+    forced-color-adjust: none;
+  }
+  
+  .enhanced-toolbar-button:focus {
+    outline: 2px solid Highlight;
+    background: Highlight;
+    color: HighlightText;
+  }
+  
+  .enhanced-toolbar-button[aria-pressed="true"] {
+    background: ActiveCaption;
+    color: CaptionText;
+    border-color: ActiveBorder;
+  }
+  
+  .enhanced-toolbar-button[aria-disabled="true"] {
+    background: GrayText;
+    color: Canvas;
+    border-color: GrayText;
+  }
+  
+  .enhanced-toolbar-separator {
+    background: ButtonBorder;
+  }
+}
+
+/* Dark Mode Accessibility Enhancements */
+@media (prefers-color-scheme: dark) {
+  .enhanced-toolbar-button::after {
+    background: rgba(255, 255, 255, 0.9);
+    color: black;
+  }
+  
+  .enhanced-toolbar-group::after {
+    background: rgba(255, 255, 255, 0.9);
+    color: black;
+  }
+}
+
+/* Motion-Safe Animations */
+@media (prefers-reduced-motion: no-preference) {
+  .enhanced-toolbar-button {
+    transition: all 0.15s ease-in-out;
+  }
+  
+  .enhanced-toolbar-button:focus {
+    transition: all 0.1s ease-in-out;
+  }
+  
+  .enhanced-toolbar-button::after,
+  .enhanced-toolbar-group::after {
+    transition: opacity 0.2s ease-in-out;
+  }
 }

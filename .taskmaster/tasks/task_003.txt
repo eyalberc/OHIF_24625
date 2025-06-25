@@ -1,0 +1,109 @@
+# Task ID: 3
+# Title: Complete Study Comparison Highlighting Integration
+# Status: pending
+# Dependencies: 1, 2
+# Priority: medium
+# Description: Enhance the existing StudyAwareViewport component to fully implement study comparison highlighting, including current/prior study detection logic and integration with OHIF's viewport and study management services.
+# Details:
+This task involves completing the integration of the existing StudyAwareViewport wrapper component located at `extensions/ui-enhancements/src/components/StudyAwareViewport/StudyAwareViewport.tsx`. The component foundation exists but requires additional implementation to fully support study comparison highlighting.
+
+Key implementation steps:
+
+1. **Current/Prior Study Detection Logic**:
+   - Implement logic to determine if a viewport contains the current study or a prior study
+   - Integrate with OHIF's StudyService to access study metadata (dates, accession numbers, etc.)
+   - Create utility functions to compare studies and determine their temporal relationship
+   - Handle edge cases such as multiple prior studies or studies without proper date information
+
+2. **ViewportGridService Integration**:
+   - Connect the component with ViewportGridService to maintain awareness of the current viewport context
+   - Subscribe to relevant events from ViewportGridService to detect viewport changes
+   - Implement proper cleanup of subscriptions in component unmount lifecycle
+   - Ensure the component responds appropriately to viewport layout changes
+
+3. **Visual Highlighting Implementation**:
+   - Implement conditional border styling based on study type (current vs. prior)
+   - Add configurable border colors through component props or configuration
+   - Create study date overlay component that displays relevant date information
+   - Ensure the overlay is positioned correctly and remains visible without obstructing image content
+
+4. **Performance Optimization**:
+   - Implement memoization for expensive computations
+   - Use React.memo or shouldComponentUpdate to prevent unnecessary re-renders
+   - Ensure efficient subscription management to viewport and study services
+   - Test and optimize for various viewport configurations
+
+The implementation should leverage existing OHIF services and avoid creating redundant functionality. The component should be flexible enough to work with different viewport layouts and configurations while maintaining consistent visual highlighting.
+
+# Test Strategy:
+1. **Unit Testing**:
+   - Write comprehensive unit tests for the StudyAwareViewport component
+   - Test the current/prior study detection logic with various study date scenarios
+   - Mock the ViewportGridService and StudyService to verify proper integration
+   - Verify that the component correctly handles edge cases (missing dates, multiple priors)
+
+2. **Integration Testing**:
+   - Test the component within the OHIF viewer with actual study data
+   - Verify that border highlighting appears correctly for current and prior studies
+   - Confirm that study date overlays display the correct information
+   - Test subscription management by changing viewports and verifying correct updates
+
+3. **Visual Verification**:
+   - Create a test plan with screenshots of expected highlighting for different scenarios
+   - Verify border colors match the design specifications
+   - Check that date overlays are legible and correctly positioned
+   - Ensure highlighting works correctly with different viewport sizes and layouts
+
+4. **Performance Testing**:
+   - Measure render times with different numbers of viewports
+   - Test with various viewport layout configurations (1x1, 2x2, 3x3, etc.)
+   - Verify that component subscriptions are properly cleaned up to prevent memory leaks
+   - Profile the application to ensure the component doesn't introduce performance bottlenecks
+
+5. **Cross-browser Testing**:
+   - Verify functionality works consistently across Chrome, Firefox, Safari, and Edge
+   - Check that visual highlighting appears correctly on different browsers and screen resolutions
+
+# Subtasks:
+## 1. Implement Current/Prior Study Detection Logic [pending]
+### Dependencies: None
+### Description: Develop logic to accurately detect and differentiate between current and prior studies for comparison highlighting.
+### Details:
+Analyze study metadata and implement algorithms to identify which studies are current and which are prior, ensuring robust handling of edge cases such as missing or ambiguous data.
+
+## 2. Integrate with ViewportGridService [pending]
+### Dependencies: 3.1
+### Description: Integrate the study detection logic with the ViewportGridService to manage and update viewport layouts based on study comparison requirements.
+### Details:
+Utilize ViewportGridService events and methods (e.g., getActiveViewportId, LAYOUT_CHANGED) to synchronize study highlighting with viewport state and ensure correct mapping of studies to viewports.
+
+## 3. Implement Visual Highlighting for Study Comparison [pending]
+### Dependencies: 3.2
+### Description: Develop and apply visual cues (e.g., borders, overlays, color coding) to clearly distinguish current and prior studies within the viewport grid.
+### Details:
+Design and implement UI elements that visually highlight the comparison, ensuring accessibility and consistency across different viewport layouts.
+
+## 4. Optimize Performance of Highlighting Logic [pending]
+### Dependencies: 3.3
+### Description: Profile and optimize the performance of the study detection and highlighting logic to ensure smooth user experience, especially with large datasets or complex layouts.
+### Details:
+Apply memoization, virtualization, and efficient state updates as needed to minimize re-renders and layout recalculations, leveraging best practices for viewport-aware UI performance.
+
+## 5. Develop Unit and Integration Tests [pending]
+### Dependencies: 3.4
+### Description: Create comprehensive unit and integration tests for the study detection, ViewportGridService integration, and highlighting logic.
+### Details:
+Ensure all edge cases are covered and that the integration between services and UI components is robust and reliable.
+
+## 6. Conduct Visual Verification [pending]
+### Dependencies: 3.5
+### Description: Verify the visual correctness of the highlighting implementation across all supported viewport layouts and study scenarios.
+### Details:
+Perform manual and automated visual checks to confirm that highlighting is accurate, clear, and consistent, addressing any UI regressions or inconsistencies.
+
+## 7. Perform Cross-Browser Testing [pending]
+### Dependencies: None
+### Description: Test the study comparison highlighting feature across all supported browsers to ensure consistent behavior and appearance.
+### Details:
+Identify and resolve any browser-specific issues related to layout, rendering, or interactivity, ensuring a seamless experience for all users.
+
